@@ -166,7 +166,6 @@
               :is-in-wishlist="isInWishlist({ product })"
               :wishlist-icon="isAuthenticated ? 'heart' : ''"
               :is-in-wishlist-icon="isInWishlist({product}) ? 'active' : ''"
-              :getHomeLatest="getHomeLatest"
               :stockStatus="product.stock_status"
               :stockLeft="product.only_x_left_in_stock"
               :is_bestseller="product.is_bestseller"
@@ -209,7 +208,6 @@
               :is-in-wishlist="isInWishlist({product})"
               :is-in-wishlist-icon="isInWishlist({product})? 'active' : ''"
               :wishlist-icon="isAuthenticated ? 'heart' : ''"
-              :getHomeLatest="getHomeLatest"
               :stockStatus="product.stock_status"
               :stockLeft="product.only_x_left_in_stock"
               :is_bestseller="product.is_bestseller"
@@ -321,7 +319,7 @@ import {
   useUser,
   useWishlist,
 } from "@vue-storefront/magento";
-import { onSSR, useVSFContext } from "@vue-storefront/core";
+import { Logger, onSSR, useVSFContext } from "@vue-storefront/core";
 import CategorySidebarMenu from "~/components/Category/CategorySidebarMenu";
 import { useUrlResolver } from "~/composables/useUrlResolver.ts";
 import { useUiHelpers, useUiState } from "~/composables";
@@ -435,7 +433,6 @@ export default defineComponent({
       removeItem: removeItemFromWishlist,
     } = useWishlist("GlobalWishlist");
     const { toggleLoginModal } = useUiState();
-
     const products = computed(() => facetGetters.getProducts(result.value));
 
     const categoryTree = computed(() =>

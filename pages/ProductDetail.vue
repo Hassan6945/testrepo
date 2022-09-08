@@ -842,7 +842,7 @@ onBeforeMount(() => {
     const configProductOption = () => {
       const psku = product.value.sku;
       axios
-        .get(`https://meccamagento.addwebprojects.com/rest/V1/configoptions?sku=${psku}`)
+        .get(`http://mbmagento.local/rest/V1/configoptions?sku=${psku}`)
           .then(response => {
               console.log(response.data[0].data);
               let data = [];

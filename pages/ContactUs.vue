@@ -201,7 +201,7 @@ export default {
         return false; 
       }
       else {
-        axios.post(`https://meccamagento.addwebprojects.com/rest/V1/contactus?contactForm[name]=${this.firstName} AddWeb&contactForm[email] =${this.email}&contactForm[telephone]=9878455623&contactForm[comment]=This is test&contactForm[reason]=${this.reason}&contactForm[order_id]=${this.orderReference}`).then(response => console.log(response));
+        axios.post(`http://mbmagento.local/rest/V1/contactus?contactForm[name]=${this.firstName} AddWeb&contactForm[email] =${this.email}&contactForm[telephone]=9878455623&contactForm[comment]=This is test&contactForm[reason]=${this.reason}&contactForm[order_id]=${this.orderReference}`).then(response => console.log(response));
 
         this.AllFormData.push(formData);
         this.firstName = "";

@@ -472,7 +472,7 @@ export default {
     fetchtop50({commit, dispatch, state}){
       {
       DrupalAxios
-          .get('http://meccamagento.addwebprojects.com/rest/V1/top-50')
+          .get('http://mbmagento.local/rest/V1/top-50')
           .then(response => {
             commit('SET_TOP50', response.data)
             console.log(response.data);
@@ -485,7 +485,7 @@ export default {
   fetchSignedBooks({commit, dispatch, state}){
     {
     DrupalAxios
-        .get('http://meccamagento.addwebprojects.com/rest/V1/signed-book')
+        .get('http://mbmagento.local/rest/V1/signed-book')
         .then(response => {
           commit('SET_SIGNED_BOOKS', response.data)
           console.log(response.data);
