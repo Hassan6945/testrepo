@@ -1,0 +1,32 @@
+// @mixin bg-shadow($type: primary) {
+//   background-color: var(--c-bg);
+//   // box-shadow: var(--shadow-#{$type});
+// }
+
+// @mixin bg-bottom {
+//   background: var(--c-bg);
+//   // box-shadow: 1px -2px 5px var(--c-shadow-primary);
+// }
+
+// @mixin vue-carousel {
+//   .VueCarousel {
+//     padding-bottom: 10px;
+
+//     &-dot {
+//       outline: initial !important;
+//       height: 3px !important;
+//       width: 20px !important;
+//       border-radius: initial !important;
+//       padding: 0px !important;
+//       background-color: var(--c-bg) !important;
+
+//       &:not(:last-child) {
+//         margin-inline-end: 0.5rem !important;
+//       }
+
+//       &--active {
+//         background-color: var(--c-bg) !important;
+//       }
+//     }
+//   }
+// }

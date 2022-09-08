@@ -1,0 +1,46 @@
+:root {
+  --c-white: #fff;
+  --c-black: #000;
+  --c-primary: #2c354e;
+  --c-primary-dark: #3d455d;
+  --c-primary-light: #636e8e;
+  --c-secondary: #c6b075;
+  --c-secondary-dark: #b69f62;
+  --c-secondary-light: #f6b119;
+  --c-bg: var(--c-white);
+  --c-text: #4b4c4d;
+  --c-text-secondary: #988146;
+  --c-product-bg: #faf8f4;
+  --c-beige: #f1ede3;
+  --c-kids-teal: #21a6bb;
+  --c-kids-purple: #72388d;
+  --c-dark-grey: #aeaeae;
+  --c-link: black;
+  --c-link-hover: #333;
+  --c-border: #acacac;
+  --c-border-light: #e4e4e4;
+  --c-border-dark: #c1c1c1;
+  --c-icon: #d9c09e;
+  --c-icon-active: #462724;
+
+  --space-container: 20px;
+
+  
+  --h1: 2rem; //32px
+  --h2: 2rem; //32px
+  --h3: 1.375rem; // 22px
+  --h4: 1rem; //16px
+  --h5: 0.875rem; //14px
+  --h6: 0.75rem; //12px
+
+  @include for-desktop {
+      --product-ranges-space: 44px;
+
+      --h1: 3rem; //48px
+      --h2: 2.25rem; //36px
+      --h3: 1.5rem; //24px
+      --h4: 1.125rem; //18px
+      --h5: 0.875rem; //14px
+      --h6: 0.625rem; //10px
+  }
+}

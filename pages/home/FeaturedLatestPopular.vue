@@ -74,11 +74,11 @@
                     class="publisher">{{
                   selectedImage
                     ? selectedImage.author_name !== false &&
-                      selectedImage.author_name !== null
+                      selectedImage.author_name != "Null"
                       ? selectedImage.author_name
                       : ""
                     : mainImage.author_name !== false &&
-                      mainImage.author_name !== null
+                      mainImage.author_name != "Null"
                     ? mainImage.author_name
                     : ""
                 }}</span>
@@ -178,11 +178,11 @@
                     class="publisher">{{
                   selectedImage2
                     ? selectedImage2.author_name !== false &&
-                      selectedImage2.author_name !== null
+                      selectedImage2.author_name != "Null"
                       ? selectedImage2.author_name
                       : ""
                     : mainImage2.author_name !== false &&
-                      mainImage2.author_name !== null
+                      mainImage2.author_name != "Null"
                     ? mainImage2.author_name
                     : ""
                 }}</span>
@@ -282,11 +282,11 @@
                     class="publisher">{{
                   selectedImage3
                     ? selectedImage3.author_name !== false &&
-                      selectedImage3.author_name !== null
+                      selectedImage3.author_name != "Null"
                       ? selectedImage3.author_name
                       : ""
                     : mainImage3.author_name !== false &&
-                      mainImage3.author_name !== null
+                      mainImage3.author_name != "Null"
                     ? mainImage3.author_name
                     : ""
                 }}</span>
@@ -634,11 +634,11 @@
                 >{{
                   selectedLatestImage
                     ? selectedLatestImage.author_name != false &&
-                      selectedLatestImage.author_name != null
+                      selectedLatestImage.author_name != "Null"
                       ? selectedLatestImage.author_name
                       : ""
                     : mainLatestImage.author_name !== false &&
-                      mainLatestImage.author_name !== null
+                      mainLatestImage.author_name != "Null"
                     ? mainLatestImage.author_name
                     : ""
                 }}</span
@@ -749,11 +749,11 @@
                 >{{
                   selectedLatestImage2
                     ? selectedLatestImage2.author_name != false &&
-                      selectedLatestImage2.author_name != null
+                      selectedLatestImage2.author_name != "Null"
                       ? selectedLatestImage2.author_name
                       : ""
                     : mainLatestImage2.author_name !== false &&
-                      mainLatestImage2.author_name !== null
+                      mainLatestImage2.author_name != "Null"
                     ? mainLatestImage2.author_name
                     : ""
                 }}</span
@@ -864,11 +864,11 @@
                 >{{
                   selectedLatestImage3
                     ? selectedLatestImage3.author_name != false &&
-                      selectedLatestImage3.author_name != null
+                      selectedLatestImage3.author_name != "Null"
                       ? selectedLatestImage3.author_name
                       : ""
                     : mainLatestImage3.author_name !== false &&
-                      mainLatestImage3.author_name !== null
+                      mainLatestImage3.author_name != "Null"
                     ? mainLatestImage3.author_name
                     : ""
                 }}</span
@@ -1207,11 +1207,11 @@
                 >{{
                   selectedPopularImage
                     ? selectedPopularImage.author_name !== false &&
-                      selectedPopularImage.author_name !== null
+                      selectedPopularImage.author_name != "Null"
                       ? selectedPopularImage.author_name
                       : ""
                     : mainPopularImage.author_name !== false &&
-                      mainPopularImage.author_name !== null
+                      mainPopularImage.author_name != "Null"
                     ? mainPopularImage.author_name
                     : ""
                 }}</span
@@ -1322,11 +1322,11 @@
                 >{{
                   selectedPopularImage2
                     ? selectedPopularImage2.author_name !== false &&
-                      selectedPopularImage2.author_name !== null
+                      selectedPopularImage2.author_name != "Null"
                       ? selectedPopularImage2.author_name
                       : ""
                     : mainPopularImage2.author_name !== false &&
-                      mainPopularImage2.author_name !== null
+                      mainPopularImage2.author_name != "Null"
                     ? mainPopularImage2.author_name
                     : ""
                 }}</span
@@ -1437,11 +1437,11 @@
                 >{{
                   selectedPopularImage3
                     ? selectedPopularImage3.author_name !== false &&
-                      selectedPopularImage3.author_name !== null
+                      selectedPopularImage3.author_name != "Null"
                       ? selectedPopularImage3.author_name
                       : ""
                     : mainPopularImage3.author_name !== false &&
-                      mainPopularImage3.author_name !== null
+                      mainPopularImage3.author_name != "Null"
                     ? mainPopularImage3.author_name
                     : ""
                 }}</span

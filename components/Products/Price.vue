@@ -27,6 +27,12 @@
 <script>
 export default {
   name: 'Price',
+  props:  {
+    productsku: {
+      type: String,
+      default: null,
+    },
+  },
   props: ['price'],
   computed: {
     onSale: function () {

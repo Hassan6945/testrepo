@@ -15,9 +15,35 @@
                 class="breadcrumb"
               >
                 <li class="breadcrumb-item">
-                  <nuxt-link :to="val.link ? (val.text!==breadcrumbs[0].text ? (index == 2 ? splitHTML(val.link).replace('/c', splitHTML(breadcrumbs[0].link)  + splitHTML(breadcrumbs[1].link.replace('/c',''))) : splitHTML(val.link).replace('/c','/c/' + breadcrumbs[0].text.toLowerCase())) : (index == 2 ? (splitHTML(val.link)).replace('/c','/c/' + breadcrumbs[1].link.replace('/c','')) : splitHTML(val.link)) )  : '!#'"
-                    >{{ val.text === 'Kids' || val.text === 'Categories' ? "Books"
-                    : val.text }}
+                  <nuxt-link
+                    :to="
+                      val.link
+                        ? val.text !== breadcrumbs[0].text
+                          ? index == 2
+                            ? splitHTML(val.link).replace(
+                                '/c',
+                                splitHTML(breadcrumbs[0].link) +
+                                  splitHTML(
+                                    breadcrumbs[1].link.replace('/c', '')
+                                  )
+                              )
+                            : splitHTML(val.link).replace(
+                                '/c',
+                                '/c/' + breadcrumbs[0].text.toLowerCase()
+                              )
+                          : index == 2
+                          ? splitHTML(val.link).replace(
+                              '/c',
+                              '/c/' + breadcrumbs[1].link.replace('/c', '')
+                            )
+                          : splitHTML(val.link)
+                        : '!#'
+                    "
+                    >{{
+                      val.text === "Kids" || val.text === "Categories"
+                        ? "Books"
+                        : val.text
+                    }}
                   </nuxt-link>
                   <span v-if="breadcrumbs && index < breadcrumbs.length - 1"
                     >></span
@@ -35,7 +61,11 @@
                   v-if="product.media_gallery"
                   :productGallery="product.media_gallery"
                   :breadcrumbs="breadcrumbs"
-                  :imageIndex="product.media_gallery.findIndex((object) => object.url === product.image.url)"
+                  :imageIndex="
+                    product.media_gallery.findIndex(
+                      (object) => object.url === product.image.url
+                    )
+                  "
                 />
                 <div v-else class="product-slider">
                   <div class="product-img" style="background-image: url()">
@@ -52,9 +82,17 @@
 
                 <AuthorEdition :productsku="product.sku" />
                 <div class="rating">
-                          <rating :rating="productGetters.getAverageRating(product)"></rating>
+                  <rating
+                    :rating="productGetters.getAverageRating(product)"
+                  ></rating>
                 </div>
-                <p class="desc">{{productShortDescription ? removeTags(productShortDescription) : '' }}</p>
+                <p class="desc">
+                  {{
+                    productShortDescription
+                      ? removeTags(productShortDescription)
+                      : ""
+                  }}
+                </p>
                 <div
                   class="stiky-onscroll"
                   :class="stickyHeader ? 'active-sticky' : null"
@@ -67,13 +105,24 @@
                       justify-content-between
                     "
                   >
-                    <div class="th-wrp d-flex align-items-center"
-                    @click="scrollToTop">
-                      <div class="thumb-img"
-                        :class="breadcrumbs[0].text==='Kids' ? ('kidsbg' + (Math.floor(Math.random() * 8)+1)) : 'slider-img-bg'"
+                    <div
+                      class="th-wrp d-flex align-items-center"
+                      @click="scrollToTop"
+                    >
+                      <div
+                        class="thumb-img"
+                        :class="
+                          breadcrumbs[0].text === 'Kids'
+                            ? 'kidsbg' + (Math.floor(Math.random() * 8) + 1)
+                            : 'slider-img-bg'
+                        "
                       >
-													<img v-if="product && product.image && product.image.url" :src="product.image.url" alt="">
-											</div>
+                        <img
+                          v-if="product && product.image && product.image.url"
+                          :src="product.image.url"
+                          alt=""
+                        />
+                      </div>
 
                       <div class="th-info">
                         <h4 class="th-title">
@@ -83,172 +132,230 @@
                       </div>
                     </div>
                     <div class="d-flex">
-                         <PriceVariation
-                              v-if="product.__typename == 'SimpleProduct'"
-                              :productsku="product.sku"
-                              :Singleprice="$n(productPrice, 'currency')"
-                            />
-                            <template
-                            v-for="option in configurableOptions"
+                      <SfPrice
+                        v-if="product.__typename == 'SimpleProduct'"
+                        :class="{ 'display-none': !productPrice }"
+                        class="price-wrap"
+                        :regular="$n(productPrice, 'currency')"
+                        :special="$n(productSpecialPrice, 'currency')"
+                      />
+                      <template v-for="option in configurableOptions">
+                        <div
+                          v-if="option.attribute_code === 'color'"
+                          :key="option.uid"
+                          class="product__colors desktop-only"
+                        >
+                          <p class="product__color-label">
+                            {{ option.label }}:
+                          </p>
+                          <SfColor
+                            v-for="color in option.values"
+                            :key="color.uid"
+                            :color="
+                              productGetters.getSwatchData(color.swatch_data)
+                            "
+                            :selected="
+                              productConfiguration[option.attribute_uid] ===
+                              color.uid
+                            "
+                            class="product__color"
+                            @click="
+                              () =>
+                                updateProductConfiguration(
+                                  option.attribute_uid,
+                                  color.uid
+                                )
+                            "
+                          />
+                        </div>
+                        <div
+                          v-else-if="option.attribute_code === 'format'"
+                          :key="option.uid"
+                          class="product__colors desktop-only"
+                        >
+                          <AWPriceSelector
+                            v-for="(color, index) in option.values"
+                            :key="index"
+                            :idx="index"
+                            :configPrice="
+                              priceStoreConfig ? priceStoreConfig[index] : ''
+                            "
+                            :color="
+                              productGetters.getSwatchData(color.swatch_data)
+                            "
+                            :productsku="product.sku"
+                            :selected="
+                              productConfiguration[option.attribute_uid] ===
+                              color.uid
+                            "
+                            @click="
+                              () =>
+                                updateProductConfiguration(
+                                  option.attribute_uid,
+                                  color.uid
+                                )
+                            "
                           >
-                            <div
-                              v-if="option.attribute_code === 'color'"
-                              :key="option.uid"
-                              class="product__colors desktop-only"
-                            >
-                              <p class="product__color-label">
-                                {{ option.label }}:
-                              </p>
-                              <SfColor
-                                v-for="color in option.values"
-                                :key="color.uid"
-                                :color="productGetters.getSwatchData(color.swatch_data)"
-                                :selected="productConfiguration[option.attribute_uid] === color.uid"
-                                class="product__color"
-                                @click="() => updateProductConfiguration(option.attribute_uid, color.uid)"
-                              />
-                            </div>
-                            <div
-                              v-else-if="option.attribute_code === 'format'"
-                              :key="option.uid"
-                              class="product__colors desktop-only"
-                            >
-
-                              <AWPriceSelector
-                                v-for="(color, index) in option.values"
-                                :key="index"
-                                :idx="index"
-                                :configPrice="priceStoreConfig ? priceStoreConfig[index] : '' "
-                                :color="productGetters.getSwatchData(color.swatch_data)"
-                                :productsku="product.sku"
-                                :selected="productConfiguration[option.attribute_uid] === color.uid"
-                                @click="() => updateProductConfiguration(option.attribute_uid, color.uid)"
-                              >
-                              </AWPriceSelector>
-                            </div>
-                          </template>
+                          </AWPriceSelector>
+                        </div>
+                      </template>
                       <div class="add-cart">
                         <button
                           @click="addItem({ product, quantity: parseInt(qty) })"
                           href="#"
                           class="btn cart-btn btn-larg-yello text-uppercase"
-                          :disabled="product.only_x_left_in_stock>0"
+                          :disabled="product.only_x_left_in_stock > 0"
                         >
-                          <span>Add to cart</span>
+                          <span>Add to cart mob</span>
                         </button>
                       </div>
                     </div>
                   </div>
                 </div>
-                <PriceVariation
+                <SfPrice
                   v-if="product.__typename == 'SimpleProduct'"
+                  :class="{ 'display-none': !productPrice }"
                   :productsku="product.sku"
-                  :Singleprice="$n(productPrice, 'currency')"
+                  class="price-wrap"
+                  :regular="$n(productPrice, 'currency')"
+                  :special="$n(productSpecialPrice, 'currency')"
                 />
-                <template
-                v-for="option in configurableOptions"
-              >
-                <div
-                  v-if="option.attribute_code === 'color'"
-                  :key="option.uid"
-                  class="product__colors desktop-only"
-                >
-                  <p class="product__color-label">
-                    {{ option.label }}:
-                  </p>
-                  <SfColor
-                    v-for="color in option.values"
-                    :key="color.uid"
-                    :color="productGetters.getSwatchData(color.swatch_data)"
-                    :selected="productConfiguration[option.attribute_uid] === color.uid"
-                    class="product__color"
-                    @click="() => updateProductConfiguration(option.attribute_uid, color.uid)"
-                  />
-                </div>
-                <div
-                  v-else-if="option.attribute_code === 'format'"
-                  :key="option.uid"
-                  class="product__colors"
-                >
-                  <AWPriceSelector
-                    v-for="(color, index) in option.values"
-                    :key="index"
-                    :idx="index"
-                    :configPrice="priceStoreConfig ? priceStoreConfig[productGetters.getSwatchData(color.swatch_data)] : '' "
-                    :color="productGetters.getSwatchData(color.swatch_data)"
-                    :productsku="product.sku"
-                    :selected="productConfiguration[option.attribute_uid] === color.uid"
-                    @click="() => updateProductConfiguration(option.attribute_uid, color.uid)"
-                  >
-                  </AWPriceSelector>
-                </div>
-              </template>
-
-              <template v-if="product.stock_status == 'IN_STOCK' || !isAuthenticated">
-                <div class="add-cart d-md-flex">
+                <template v-for="option in configurableOptions">
                   <div
-                    class="
-                      inc-dcr-item
-                      count
-                      d-none d-md-flex
-                      align-items-center
-                      justify-content-center
-                    "
+                    v-if="option.attribute_code === 'color'"
+                    :key="option.uid"
+                    class="product__colors desktop-only"
                   >
-                    <button
-                      type="button"
-                      @click="qty > 2 ? qty-- : (qty = 1)"
-                      class="decre-btn"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="text"
-                      class="onlyNumber form-control pull-left"
-                      :value="qty"
-                      name="noOfRoom"
+                    <p class="product__color-label">{{ option.label }}:</p>
+                    <SfColor
+                      v-for="color in option.values"
+                      :key="color.uid"
+                      :color="productGetters.getSwatchData(color.swatch_data)"
+                      :selected="
+                        productConfiguration[option.attribute_uid] === color.uid
+                      "
+                      class="product__color"
+                      @click="
+                        () =>
+                          updateProductConfiguration(
+                            option.attribute_uid,
+                            color.uid
+                          )
+                      "
                     />
-                    <button
-                      type="button"
-                      @click="qty++"
-                      value="+"
-                      class="incr-btn"
-                    >
-                      +
-                    </button>
                   </div>
-                  <button
-                    @click="addItem({ product, quantity: parseInt(qty) })"
-                    href="#"
-                    class="btn btn-larg-yello text-uppercase"
-                    :disabled="product.only_x_left_in_stock>0"
+                  <div
+                    v-else-if="option.attribute_code === 'format'"
+                    :key="option.uid"
+                    class="product__colors"
                   >
-                    <span>Add to cart</span>
-                  </button>
+                    <AWPriceSelector
+                      v-for="(color, index) in option.values"
+                      :key="index"
+                      :idx="index"
+                      :configPrice="
+                        priceStoreConfig
+                          ? priceStoreConfig[
+                              productGetters.getSwatchData(color.swatch_data)
+                            ]
+                          : ''
+                      "
+                      :color="productGetters.getSwatchData(color.swatch_data)"
+                      :productsku="product.sku"
+                      :selected="
+                        productConfiguration[option.attribute_uid] === color.uid
+                      "
+                      @click="
+                        () =>
+                          updateProductConfiguration(
+                            option.attribute_uid,
+                            color.uid
+                          )
+                      "
+                    >
+                    </AWPriceSelector>
+                  </div>
+                </template>
 
-                  <!-- configurableOptions pricevariation -->
-                </div>
-              </template>
+                <template
+                  v-if="product.stock_status == 'IN_STOCK'"
+                >
+                  <div class="add-cart d-md-flex">
+                    <div
+                      class="
+                        inc-dcr-item
+                        count
+                        d-none d-md-flex
+                        align-items-center
+                        justify-content-center
+                      "
+                    >
+                      <button
+                        type="button"
+                        @click="qty > 2 ? qty-- : (qty = 1)"
+                        class="decre-btn"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        class="onlyNumber form-control pull-left"
+                        :value="qty"
+                        name="noOfRoom"
+                      />
+                      <button
+                        type="button"
+                        @click="qty++"
+                        value="+"
+                        class="incr-btn"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      @click="addItem({ product, quantity: parseInt(qty) })"
+                      href="#"
+                      class="btn btn-larg-yello text-uppercase"
+                      :disabled="product.only_x_left_in_stock > 0"
+                    >
+                      <span>Add to cart desk</span>
+                    </button>
 
-              <template v-if="product.stock_status == 'OUT_OF_STOCK' && isAuthenticated">
-                <!-- <form class="out-of-stock"> -->
-										<span class="stock-title text-uppercase d-block">currently out of Stock</span>
-										<div class="input-wrap notify_block">
-											<!-- <label for="email">Enter your email to be notified when available</label> -->
-											<div class="fld-wrp d-flex justify-content-between">
-												<!-- <input type="email" id="email" class="form-control" placeholder="Your email address" /> -->
-                        <button class="btn" @click="notifyUser(email)">
-                          Notify Me
-                        </button>
+                    <!-- configurableOptions pricevariation -->
+                  </div>
+                </template>
 
-												<!-- <a href="" class="btn"><span>Notify Me</span></a> -->
-											</div>
-                      <div class="fld-wrp d-flex justify-content-between" v-if="notificationAdded">
-                        <span class="notify_success">You will be notified once this product is in stock again.</span>
-                      </div>
-										</div>
-								<!-- </form> -->
-              </template>
+                <template
+                  v-if="
+                    product.stock_status == 'OUT_OF_STOCK'
+                  "
+                >
+                  <!-- <form class="out-of-stock"> -->
+                  <span class="stock-title text-uppercase d-block"
+                    >Currently out of Stock</span
+                  >
+                  <div class="input-wrap notify_block">
+                    <!-- <label for="email">Enter your email to be notified when available</label> -->
+                    <div class="fld-wrp d-flex justify-content-between">
+                      <!-- <input type="email" id="email" class="form-control" placeholder="Your email address" /> -->
+                      <button class="btn" v-if="isAuthenticated && !notificationAdded" @click="notifyUser(email)">
+                        Notify Me
+                      </button>
+
+                      <!-- <a href="" class="btn"><span>Notify Me</span></a> -->
+                    </div>
+                    <div
+                      class="fld-wrp d-flex justify-content-between"
+                      v-if="notificationAdded"
+                    >
+                      <span class="notify_success"
+                        >You will be notified once this product is in stock
+                        again.</span
+                      >
+                    </div>
+                  </div>
+                  <!-- </form> -->
+                </template>
                 <div class="share-links d-md-flex align-items-center">
                   <div class="wishlist-wrap">
                     <AddToWishlist
@@ -272,7 +379,7 @@
             </div>
           </div>
         </div>
-           
+
         <section :class="alchemiaVisible ? 'alchemia-show' : 'alchemia-hide'">
           <div class="popup-overlay active d-none d-md-block">
             <div class="signin-popup shipping-popup watchvideo-popup">
@@ -289,13 +396,13 @@
             </div>
           </div>
         </section>
-          <section class="product-about-sec">
+        <section class="product-about-sec">
           <div class="container">
             <div class="about-product d-lg-flex justify-content-between">
               <div class="data-sheet d-lg-none">
                 <div class="control-link d-lg-flex">
                   <a
-                    @click="e => e.target.classList.toggle('active')"
+                    @click="(e) => e.target.classList.toggle('active')"
                     class="
                       btns-links
                       datasheet-btn
@@ -313,7 +420,7 @@
                     <datasheet v-if="product.sku" :productsku="product.sku" />
                   </div>
                   <a
-                    @click="e => e.target.classList.toggle('active')"
+                    @click="(e) => e.target.classList.toggle('active')"
                     class="
                       btns-links
                       d-flex
@@ -328,23 +435,44 @@
                     /></i>
                     reviews</a
                   >
-                  <div class="view-datasheet d-lg-none"
-                  :class="[isVisible ? 'active' : '']">
-                   <template v-if="magentoReviews && magentoReviews.length>0">
-                  <div v-for="review in magentoReviews" :key="review" class="review-wrap">
-                    <h5 v-if="review.user && review.user.display_name" class="list-rw"><span class="list-head">User : </span>
-                      <span class="list-desc">{{review.user.display_name}}</span></h5>
-                    <h6 v-if="review.title"><span class="list-head">Title :</span><span class="list-desc">{{review.title}}</span></h6>
-                    <p class="desc" v-if="review.content"><span class="list-head">Content :
-                      </span><span class="list-desc">{{review.content}}</span></p>
+                  <div
+                    class="view-datasheet d-lg-none"
+                    :class="[isVisible ? 'active' : '']"
+                  >
+                    <template
+                      v-if="magentoReviews && magentoReviews.length > 0"
+                    >
+                      <div
+                        v-for="review in magentoReviews"
+                        :key="review"
+                        class="review-wrap"
+                      >
+                        <h5
+                          v-if="review.user && review.user.display_name"
+                          class="list-rw"
+                        >
+                          <span class="list-head">User : </span>
+                          <span class="list-desc">{{
+                            review.user.display_name
+                          }}</span>
+                        </h5>
+                        <h6 v-if="review.title">
+                          <span class="list-head">Title :</span
+                          ><span class="list-desc">{{ review.title }}</span>
+                        </h6>
+                        <p class="desc" v-if="review.content">
+                          <span class="list-head">Content : </span
+                          ><span class="list-desc">{{ review.content }}</span>
+                        </p>
+                      </div>
+                    </template>
+                    <p class="desc" v-else>
+                      The first textbook of its kind in the English-speaking
+                      world, Revelation draws on the most authoritative sources
+                      to present a detailed yet refreshing guide to the life of
+                      the Prophet and the story of Qur'anic revelation.
+                    </p>
                   </div>
-                  </template>
-                  <p class="desc" v-else>                    The first textbook of its kind in the English-speaking
-                    world, Revelation draws on the most authoritative sources to
-                    present a detailed yet refreshing guide to the life of the
-                    Prophet and the story of Qur'anic revelation.
-                  </p>
-                </div> 
                 </div>
               </div>
               <div class="data-sheet d-none d-lg-block">
@@ -393,16 +521,33 @@
                   <datasheet :productsku="product.sku" />
                 </div>
                 <div class="view-reviews" :class="[!isVisible ? 'active' : '']">
-                <template v-if="magentoReviews && magentoReviews.length>0">
-                  <div v-for="review in magentoReviews" :key="review" class="review-wrap">
-                    <h5 v-if="review.user && review.user.display_name" class="list-rw"><span class="list-head">User : </span>
-                      <span class="list-desc">{{review.user.display_name}}</span></h5>
-                    <h6 v-if="review.title"><span class="list-head">Title :</span><span class="list-desc">{{review.title}}</span></h6>
-                    <p class="desc" v-if="review.content"><span class="list-head">Content :
-                      </span><span class="list-desc">{{review.content}}</span></p>
-                  </div>
+                  <template v-if="magentoReviews && magentoReviews.length > 0">
+                    <div
+                      v-for="review in magentoReviews"
+                      :key="review"
+                      class="review-wrap"
+                    >
+                      <h5
+                        v-if="review.user && review.user.display_name"
+                        class="list-rw"
+                      >
+                        <span class="list-head">User : </span>
+                        <span class="list-desc">{{
+                          review.user.display_name
+                        }}</span>
+                      </h5>
+                      <h6 v-if="review.title">
+                        <span class="list-head">Title :</span
+                        ><span class="list-desc">{{ review.title }}</span>
+                      </h6>
+                      <p class="desc" v-if="review.content">
+                        <span class="list-head">Content : </span
+                        ><span class="list-desc">{{ review.content }}</span>
+                      </p>
+                    </div>
                   </template>
-                  <p class="desc" v-else>                    The first textbook of its kind in the English-speaking
+                  <p class="desc" v-else>
+                    The first textbook of its kind in the English-speaking
                     world, Revelation draws on the most authoritative sources to
                     present a detailed yet refreshing guide to the life of the
                     Prophet and the story of Qur'anic revelation.
@@ -414,9 +559,12 @@
               </div>
             </div>
           </div>
-        </section> 
+        </section>
         <LazyHydrate when-visible>
-          <RelatedProduct :productsku="product.sku" :breadcrumbs="breadcrumbs" />
+          <RelatedProduct
+            :productsku="product.sku"
+            :breadcrumbs="breadcrumbs"
+          />
         </LazyHydrate>
         <RecentlyViewProduct :breadcrumbs="breadcrumbs" />
         <RecentlyViewProductMobile :breadcrumbs="breadcrumbs" />
@@ -429,10 +577,7 @@ import LazyHydrate from "vue-lazy-hydration";
 import axios from "axios";
 import AWPriceSelector from "./AwComponents/atoms/AWPriceSelector.vue";
 
-import {
-  SfColor,
-  SfLoader,
-} from "@storefront-ui/vue";
+import { SfColor, SfPrice, SfLoader } from "@storefront-ui/vue";
 import {
   useProduct,
   useCart,
@@ -441,7 +586,7 @@ import {
   reviewGetters,
   useUser,
   useWishlist,
-  userGetters
+  userGetters,
 } from "@vue-storefront/magento";
 import { onSSR } from "@vue-storefront/core";
 import {
@@ -473,9 +618,9 @@ import PriceVariation from "./product-detail/PriceVariation.vue";
 import RelatedProduct from "./product-detail/RelatedProduct.vue";
 import ShareButton from "./product-detail/ShareButton.vue";
 import RecentlyViewProduct from "./product-detail/RecentlyViewProduct.vue";
-import RecentlyViewProductMobile from './product-detail/RecentlyViewProductMobile.vue';
+import RecentlyViewProductMobile from "./product-detail/RecentlyViewProductMobile.vue";
 import Rating from "~/components/Products/Rating";
-import AwLoader from './AwComponents/atoms/AwLoader.vue'
+import AwLoader from "./AwComponents/atoms/AwLoader.vue";
 
 export default defineComponent({
   name: "ProductPage",
@@ -489,6 +634,7 @@ export default defineComponent({
     ProductAddReviewForm,
     RelatedProducts,
     SfColor,
+    SfPrice,
     AwLoader,
     AddToWishlist,
     ProductSlider,
@@ -502,7 +648,7 @@ export default defineComponent({
     AWPriceSelector,
     RecentlyViewProduct,
     RecentlyViewProductMobile,
-    Rating
+    Rating,
   },
   middleware: cacheControl({
     "max-age": 60,
@@ -512,24 +658,29 @@ export default defineComponent({
   methods: {
     scrollToTop() {
       window.scrollTo(0, 0);
-    }, 
+    },
     notifyUser(email) {
-        let that = this;
-        axios.get("/addNotification?email=" + email + '&product='+atob(this.product.uid))
-          .then(response => {
-            that.notificationAdded = true;
-          })
-          .catch(function (error) {
-            console.log(error);
-          });;
-
-    }
+      let that = this;
+      axios
+        .get(
+          "/addNotification?email=" +
+            email +
+            "&product=" +
+            atob(this.product.uid)
+        )
+        .then((response) => {
+          that.notificationAdded = true;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
   },
   beforeMount() {
-    document.body.classList.add('pro-detail');
+    document.body.classList.add("pro-detail");
   },
   beforeDestroy() {
-    document.body.classList.remove('pro-detail');
+    document.body.classList.remove("pro-detail");
   },
   destroyed() {
     document.body.classList.remove("kids-route");
@@ -563,14 +714,13 @@ export default defineComponent({
     const recentlyViewProducts = ref([]);
     const magentoReviews = ref(null);
     const alchemiyaVideo = ref(null);
-    const testData = ref('')
+    const testData = ref("");
 
-    const productName = computed(()=> product.value.name);
+    const productName = computed(() => product.value.name);
     const psku = computed(() => product.value.sku);
     const purl = computed(() => product.value.image.url);
     const pprice = computed(() => productPrice.value);
     const pUrlKey = computed(() => product.value.url_key);
-
 
     const productDataIsLoading = computed(
       () => productLoading.value && !productGetters.getName(product.value)
@@ -583,15 +733,15 @@ export default defineComponent({
     );
 
     const setHtmlData = computed(() => {
-      testData.value =  productDescription.value
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#039;/g, "'");
-    return testData.value
-    })
- 
+      testData.value = productDescription.value
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+      return testData.value;
+    });
+
     const productsku = computed(() => product.value.sku?.html || "");
     const canAddToCart = computed(() => {
       // eslint-disable-next-line no-underscore-dangle
@@ -708,49 +858,47 @@ export default defineComponent({
     };
 
     const fetchProductReview = () => {
-      axios.get("/productReviews?productSku="+product.value.sku)
-        .then(response => {
+      axios
+        .get("/productReviews?productSku=" + product.value.sku)
+        .then((response) => {
           magentoReviews.value = response.data[0].data.response.reviews;
-      })
+        });
     };
-     const fetchalchemiyaVideo = () => {
-
-      axios.get("/alchemiyaVideo?productSku="+product.value.sku)
-        .then(response => {
+    const fetchalchemiyaVideo = () => {
+      axios
+        .get("/alchemiyaVideo?productSku=" + product.value.sku)
+        .then((response) => {
           alchemiyaVideo.value = response.data[0].data.alchemia_video;
-      })
+        });
     };
-    
 
     watch(recentlyViewProducts, () => {
-      localStorage.setItem('rvproducts', JSON.stringify(recentlyViewProducts.value));
-    })
-onBeforeMount(() => {
-      fetchalchemiyaVideo();   
+      localStorage.setItem(
+        "rvproducts",
+        JSON.stringify(recentlyViewProducts.value)
+      );
+    });
+    onBeforeMount(() => {
+      fetchalchemiyaVideo();
     });
     onMounted(() => {
-      window.addEventListener('scroll', handleScroll);
-      if(product.value.__typename === "ConfigurableProduct") {
+      window.addEventListener("scroll", handleScroll);
+      if (product.value.__typename === "ConfigurableProduct") {
         configProductOption();
       }
-      if (
-        breadcrumbs.value[0] &&
-        breadcrumbs.value[0].text === "Kids"
-      ) {
+      if (breadcrumbs.value[0] && breadcrumbs.value[0].text === "Kids") {
         document.body.classList.add("kids-route");
       }
 
       if (process.client) {
-        const Storedata = JSON.parse(localStorage.getItem('rvproducts'));
+        const Storedata = JSON.parse(localStorage.getItem("rvproducts"));
 
-        if(Storedata){
+        if (Storedata) {
           const elemsToDelete = Storedata.length - 15;
           if (Storedata.length > 15) {
-              Storedata.splice(Storedata.length - elemsToDelete,
-                 elemsToDelete);
-              recentlyViewProducts.value = Storedata;
-          }
-          else{
+            Storedata.splice(Storedata.length - elemsToDelete, elemsToDelete);
+            recentlyViewProducts.value = Storedata;
+          } else {
             recentlyViewProducts.value = Storedata;
           }
         }
@@ -766,35 +914,34 @@ onBeforeMount(() => {
       fetchProductReview();
     });
 
-      const AddrecentlyViewProducts = async () => {
-
-          const Newproduct = {
-            'sku': psku.value,
-            'title': productName.value,
-            'image': purl.value,
-            'author': 'Shaykh Ahmad Ibn’Ajiba Al-Hasani',
-            'price': pprice.value,
-            'url_key': pUrlKey.value,
-            'rating': averageRating.value,
-          }
-          const indexx = await recentlyViewProducts.value.findIndex(object => object.sku === Newproduct.sku);
-          if(indexx === -1) {
-            await recentlyViewProducts.value.unshift(Newproduct);
-          }
-          else {
-            console.log("item is already in store");
-          }
-
+    const AddrecentlyViewProducts = async () => {
+      const Newproduct = {
+        sku: psku.value,
+        title: productName.value,
+        image: purl.value,
+        author: "Shaykh Ahmad Ibn’Ajiba Al-Hasani",
+        price: pprice.value,
+        url_key: pUrlKey.value,
+        rating: averageRating.value,
+      };
+      const indexx = await recentlyViewProducts.value.findIndex(
+        (object) => object.sku === Newproduct.sku
+      );
+      if (indexx === -1) {
+        await recentlyViewProducts.value.unshift(Newproduct);
+      } else {
+        console.log("item is already in store");
       }
+    };
 
-      const handleScroll = () => {
-        windowScrollPosition.value = window.scrollY
-        if (windowScrollPosition.value > 900) {
-          stickyHeader.value = true;
-        }else{
-          stickyHeader.value = false;
-        }
+    const handleScroll = () => {
+      windowScrollPosition.value = window.scrollY;
+      if (windowScrollPosition.value > 900) {
+        stickyHeader.value = true;
+      } else {
+        stickyHeader.value = false;
       }
+    };
 
     const toggleAlchemia = () => {
       alchemiaVisible.value = !alchemiaVisible.value;
@@ -842,19 +989,20 @@ onBeforeMount(() => {
     const configProductOption = () => {
       const psku = product.value.sku;
       axios
-        .get(`https://meccamagento.addwebprojects.com/rest/V1/configoptions?sku=${psku}`)
-          .then(response => {
-              console.log(response.data[0].data);
-              let data = [];
-              for(let i = 0; i < response.data[0].data.length; i++){
-                  data[response.data[0].data[i].options.format] = response.data[0].data[i];
-              }
+        .get(`https://magento-779157-2653303.cloudwaysapps.com/rest/V1/configoptions?sku=${psku}`)
+        .then((response) => {
+          console.log(response.data[0].data);
+          let data = [];
+          for (let i = 0; i < response.data[0].data.length; i++) {
+            data[response.data[0].data[i].options.format] =
+              response.data[0].data[i];
+          }
 
-              priceStoreConfig.value = data
-          })
-          .catch(error => {
-            console.log(error);
-          })
+          priceStoreConfig.value = data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
 
     return {
@@ -918,7 +1066,7 @@ onBeforeMount(() => {
       fetchProductReview,
       fetchalchemiyaVideo,
       testData,
-      setHtmlData
+      setHtmlData,
     };
   },
 });
@@ -1169,7 +1317,6 @@ onBeforeMount(() => {
   .container {
     box-shadow: 0px 4px 4px #00000010;
   }
-
 }
 
 .alchemia-show {
@@ -1210,17 +1357,17 @@ onBeforeMount(() => {
   margin-right: 25px;
 }
 .breadcrub-link {
-  color: #4B4C4D;
+  color: #4b4c4d;
 }
 
 p.desc p strong span {
-    font-size: 1.5rem;
-    color: red !important;
-    letter-spacing: -0.035em;
-    line-height: 1.2;
-    margin-bottom: 18px;
-    font-weight: 400;
-    font-family: "leksa", serif;
+  font-size: 1.5rem;
+  color: red !important;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  font-weight: 400;
+  font-family: "leksa", serif;
 }
 .product__colors {
   @media all and (max-width: 767px) {
@@ -1229,13 +1376,14 @@ p.desc p strong span {
 }
 
 .view-reviews.active {
-
   .review-wrap {
     box-shadow: 0px 4px 4px rgb(0 0 0 / 6%);
     margin-bottom: 20px;
     padding: 15px;
   }
-  h5,h6,p {
+  h5,
+  h6,
+  p {
     display: flex;
     align-items: center;
 
@@ -1245,6 +1393,6 @@ p.desc p strong span {
   }
 }
 button:disabled {
-opacity: 1;
+  opacity: 1;
 }
 </style>

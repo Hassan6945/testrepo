@@ -1068,10 +1068,10 @@ export default defineComponent({
     const searchTerm = ref(null);
     const useAlgoliaSearch = async () => {
       const client = algoliaSearch(
-        "210ZCLJ1JA",
-        "dc28e43107e238e1166d2a460327e113"
+        "IGSIYBEIPV",
+        "21f5b27d7f04012d40bf3bf034af10d4"
       );
-      const index = client.initIndex("meccabook_magento_stage_default_products");
+      const index = client.initIndex("meccabook_stagedefault_products_tmp");
       await index
         .search(searchTerm.value)
         .then(({ hits }) => {

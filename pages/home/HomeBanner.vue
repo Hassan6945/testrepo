@@ -1,18 +1,37 @@
 <template>
   <section class="home-banner">
-    <carousel
-      ref="bannercarousel"
-      :dots="true"
-      v-bind="carouselConfig"
-      class="banner-slider"
-    >
-      <div class="item" v-for="item in slider" :key="item.image.url">
-        <img class="slide-img" :src="item.image.url" :alt="item.image.alt" />
-      </div>
-      <template #customPaging="page" class="dots-wrapper">
-        <div :id="`dot_${page}`" class="custom-dot"></div>
-      </template>
-    </carousel>
+    <div class="home-banner__container">
+      <carousel
+        ref="bannercarousel"
+        :dots="true"
+        v-bind="carouselConfig"
+        class="banner-slider"
+      >
+        <div class="item" v-for="item in slider" :key="item.image.url">
+          <img class="slide-img" :src="item.image.url" :alt="item.image.alt" />
+        </div>
+        <template #customPaging="page" class="dots-wrapper">
+          <div :id="`dot_${page}`" class="custom-dot"></div>
+        </template>
+      </carousel>
+
+      <i
+        class="control prev"
+        @click="
+          slider[imageIndex - 1]
+            ? prev('bannercarousel')
+            : prevEnd('bannercarousel')
+        "
+      />
+      <i
+        class="control next"
+        @click="
+          slider[imageIndex + 1]
+            ? next('bannercarousel')
+            : nextEnd('bannercarousel')
+        "
+      />
+    </div>
     <div class="banner-content">
       <div class="container" v-if="slider[imageIndex].title">
         <div class="wrap">
@@ -35,22 +54,6 @@
         </div>
       </div>
     </div>
-    <i
-      class="control prev"
-      @click="
-        slider[imageIndex - 1]
-          ? prev('bannercarousel')
-          : prevEnd('bannercarousel')
-      "
-    ></i>
-    <i
-      class="control next"
-      @click="
-        slider[imageIndex + 1]
-          ? next('bannercarousel')
-          : nextEnd('bannercarousel')
-      "
-    ></i>
   </section>
 </template>
 
@@ -84,7 +87,6 @@ export default defineComponent({
   },
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   setup(props, context) {
-
     const bannercarousel = ref(null);
     let imageIndex = ref(0);
 
@@ -122,7 +124,7 @@ export default defineComponent({
       bannercarousel,
       imageIndex,
       nextEnd,
-      prevEnd
+      prevEnd,
     };
   },
 });
@@ -272,15 +274,6 @@ export default defineComponent({
   &.is-brown {
     background-image: url(/assets/meccabook/slide-arrow-gold.svg);
   }
-
-  @media (max-width: 767px) {
-    top: 16%;
-  }
-}
-
-.next {
-  right: 0;
-  transform: rotate(180deg);
 }
 
 .custom-dot {
@@ -354,20 +347,34 @@ export default defineComponent({
 .slick-track[data-v-e4caeaf8] {
   display: flex !important;
 }
-i.control.prev {
-  @media only screen and (min-width: 768px) {
-    margin-left: 50px;
-  }
-  @media only screen and (max-width: 767px) {
-    margin-left: 20px;
-  }
-}
-i.control.next {
-  @media only screen and (min-width: 768px) {
-    margin-right: 50px;
-  }
-  @media only screen and (max-width: 767px) {
-    margin-right: 20px;
+
+.home-banner__container {
+  position: relative;
+
+  .control {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    @media (min-width: 768px) {
+      width: 80px;
+    }
+
+    &.prev {
+      left: 0px;
+
+      @media (min-width: 768px) {
+        left: 30px;
+      }
+    }
+
+    &.next {
+      transform: translateY(-50%) rotate(180deg);
+      right: 0px;
+
+      @media (min-width: 768px) {
+        right: 30px;
+      }
+    }
   }
 }
 </style>

@@ -243,7 +243,7 @@ export default defineComponent({
 
     const fetchMenu = async () => {
       let data = await fetch(
-        'https://devmeccabooks.addwebprojects.com/api/menu'
+        'http://local.mbtestdrupal/api/menu'
       ).then(res => res.json());
 
       return data;
