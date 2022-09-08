@@ -1,0 +1,47 @@
+/* Breakpoints */
+$mobile-xs: 360px;
+$desktop-min: 1024px;
+
+@mixin for-mobile-xs {
+  @media (max-width: $mobile-xs) {
+    @content;
+  }
+}
+
+@mixin for-mobile {
+  @media (max-width: $desktop-min - 1px) {
+    @content;
+  }
+}
+
+@mixin for-desktop {
+  @media (min-width: $desktop-min) {
+    @content;
+  }
+}
+
+// device-pixel ratio
+@mixin for-2dp {
+  @media (-webkit-min-device-pixel-ratio: 2) {
+    @content;
+  }
+}
+
+@mixin for-3dp {
+  @media (-webkit-min-device-pixel-ratio: 3) {
+    @content;
+  }
+}
+
+// Visibility helpers
+.mobile-only {
+  @include for-desktop {
+    display: none !important;
+  }
+}
+
+.desktop-only {
+  @include for-mobile {
+    display: none !important;
+  }
+}

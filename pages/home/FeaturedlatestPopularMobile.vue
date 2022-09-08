@@ -88,6 +88,10 @@
                         {{ img.product_name }}
                       </h2>
                       <span
+                        v-if="
+                          img.author_name !== 'Null' &&
+                          img.author_name !== false
+                        "
                         class="publisher"
                         @click="redirectToDetailPage(img)"
                         >{{ img.author_name }}</span
@@ -102,14 +106,11 @@
                           class="price d-block"
                           @click="redirectToDetailPage(img)"
                         >
-                        <div v-if="img.special_price != '0.00'">
-                          <del>${{ img.price }}</del
-                          >${{ img.special_price }}
-                        </div>
-                        <div v-else>
-                          ${{ img.price }}
-                        </div>
-
+                          <div v-if="img.special_price != '0.00'">
+                            <del>${{ img.price }}</del
+                            >${{ img.special_price }}
+                          </div>
+                          <div v-else>${{ img.price }}</div>
                         </span>
                         <span
                           class="ratings"
@@ -124,8 +125,14 @@
                   </div>
                 </div>
               </carousel>
-              <i class="small-thumb-prev control prev" @click="prevSlide(selectedTab)"></i>
-              <i class="small-thumb-next control next" @click="nextSlide(selectedTab)"></i>
+              <i
+                class="small-thumb-prev control prev"
+                @click="prevSlide(selectedTab)"
+              ></i>
+              <i
+                class="small-thumb-next control next"
+                @click="nextSlide(selectedTab)"
+              ></i>
             </div>
           </div>
           <i class="control prev" @click="prevSlide(selectedTab)"></i>
@@ -182,6 +189,10 @@
                         {{ img.product_name }}
                       </h2>
                       <span
+                        v-if="
+                          img.author_name !== 'Null' &&
+                          img.author_name !== false
+                        "
                         class="publisher"
                         @click="redirectToDetailPage(img)"
                         >{{ img.author_name }}</span
@@ -196,13 +207,11 @@
                           class="price d-block"
                           @click="redirectToDetailPage(img)"
                         >
-                         <div v-if="img.special_price != '0.00'">
-                          <del>${{ img.price }}</del
-                          >${{ img.special_price }}
-                        </div>
-                        <div v-else>
-                          ${{ img.price }}
-                        </div>
+                          <div v-if="img.special_price != '0.00'">
+                            <del>${{ img.price }}</del
+                            >${{ img.special_price }}
+                          </div>
+                          <div v-else>${{ img.price }}</div>
                         </span>
                         <span
                           class="ratings"
@@ -217,8 +226,14 @@
                   </div>
                 </div>
               </carousel>
-              <i class="small-thumb-prev control prev" @click="prevSlide(selectedTab)"></i>
-              <i class="small-thumb-next control next" @click="nextSlide(selectedTab)"></i>
+              <i
+                class="small-thumb-prev control prev"
+                @click="prevSlide(selectedTab)"
+              ></i>
+              <i
+                class="small-thumb-next control next"
+                @click="nextSlide(selectedTab)"
+              ></i>
             </div>
           </div>
           <i class="control prev" @click="prevSlide(selectedTab)"></i>
@@ -282,21 +297,25 @@
                       <h2 class="sec-title">
                         {{ img.product_name }}
                       </h2>
-                      <span class="publisher">{{ img.author_name }}</span>
+                      <span
+                        v-if="
+                          img.author_name !== 'Null' &&
+                          img.author_name !== false
+                        "
+                        class="publisher"
+                        >{{ img.author_name }}</span
+                      >
                       <p class="sec-desc" v-html="img.short_description"></p>
                       <div class="review d-flex align-items-center">
                         <span
                           class="price d-block"
                           @click="redirectToDetailPage(img)"
                         >
-                        <div v-if="img.special_price != '0.00'">
-                          <del>${{ img.price }}</del
-                          >${{ img.special_price }}
-                        </div>
-                        <div v-else>
-                          ${{ img.price }}
-                        </div>
-
+                          <div v-if="img.special_price != '0.00'">
+                            <del>${{ img.price }}</del
+                            >${{ img.special_price }}
+                          </div>
+                          <div v-else>${{ img.price }}</div>
                         </span>
                         <span
                           class="ratings"
@@ -311,8 +330,14 @@
                   </div>
                 </div>
               </carousel>
-              <i class="small-thumb-prev control prev" @click="prevSlide(selectedTab)"></i>
-              <i class="small-thumb-next control next" @click="nextSlide(selectedTab)"></i>
+              <i
+                class="small-thumb-prev control prev"
+                @click="prevSlide(selectedTab)"
+              ></i>
+              <i
+                class="small-thumb-next control next"
+                @click="nextSlide(selectedTab)"
+              ></i>
             </div>
           </div>
           <i class="control prev" @click="prevSlide(selectedTab)"></i>
@@ -355,45 +380,45 @@ export default {
   },
   methods: {
     nextSlide(selectedTab) {
-      if(selectedTab=="featured") {
+      if (selectedTab == "featured") {
         this.$refs.carousel1.next();
         this.$refs.minicarousel1.next();
-      } else if(selectedTab=="latest") {
+      } else if (selectedTab == "latest") {
         this.$refs.carousel2.next();
         this.$refs.minicarousel2.next();
-      } else if(selectedTab=="popular") {
+      } else if (selectedTab == "popular") {
         this.$refs.carousel3.next();
         this.$refs.minicarousel3.next();
       }
     },
     prevSlide(selectedTab) {
-      if(selectedTab=="featured") {
+      if (selectedTab == "featured") {
         this.$refs.carousel1.prev();
         this.$refs.minicarousel1.prev();
-      } else if(selectedTab=="latest") {
+      } else if (selectedTab == "latest") {
         this.$refs.carousel2.prev();
         this.$refs.minicarousel2.prev();
-      } else if(selectedTab=="popular") {
+      } else if (selectedTab == "popular") {
         this.$refs.carousel3.prev();
         this.$refs.minicarousel3.prev();
       }
     },
     syncSlidersFeatured(currentPosition, nextPosition) {
-      if(this.featured){
-        this.$refs['carousel1'].goTo(nextPosition);
-        this.$refs['minicarousel1'].goTo(nextPosition);
+      if (this.featured) {
+        this.$refs["carousel1"].goTo(nextPosition);
+        this.$refs["minicarousel1"].goTo(nextPosition);
       }
     },
     syncSlidersLatest(currentPosition, nextPosition) {
-      if(this.latest){
-       this.$refs['carousel2'].goTo(nextPosition);
-        this.$refs['minicarousel2'].goTo(nextPosition);
+      if (this.latest) {
+        this.$refs["carousel2"].goTo(nextPosition);
+        this.$refs["minicarousel2"].goTo(nextPosition);
       }
     },
-    syncSlidersPopular(currentPosition, nextPosition) { 
-      if(this.popular){
-        this.$refs['carousel3'].goTo(nextPosition);
-        this.$refs['minicarousel3'].goTo(nextPosition);
+    syncSlidersPopular(currentPosition, nextPosition) {
+      if (this.popular) {
+        this.$refs["carousel3"].goTo(nextPosition);
+        this.$refs["minicarousel3"].goTo(nextPosition);
       }
     },
   },
@@ -422,7 +447,7 @@ export default {
       router.push({ path: link });
     };
     const router = useRouter();
-   
+
     return {
       productGetters,
       featuredData,
@@ -434,7 +459,6 @@ export default {
       redirectToDetailPage,
     };
   },
-
 };
 </script>
 
@@ -443,8 +467,8 @@ export default {
 .tab-content {
   display: block !important;
   @media (min-width: 1300px) {
-      display: none !important;
-    }
+    display: none !important;
+  }
 }
 
 .related-slider-img {
@@ -494,7 +518,6 @@ export default {
             @media (max-width: 991px) {
               width: 45%;
               max-width: unset;
-
             }
           }
           .latest-view {
@@ -558,21 +581,21 @@ export default {
       align-items: center;
       margin: 0 auto;
       @media (max-width: 1199px) {
-          // width: 184px !important;
-          // height: 182px;
-          max-height: unset !important;
-          max-width: unset !important;
-          height: 40vw !important;
-          width: 40vw !important;
+        // width: 184px !important;
+        // height: 182px;
+        max-height: unset !important;
+        max-width: unset !important;
+        height: 40vw !important;
+        width: 40vw !important;
       }
-       @media (max-width: 991px) {
-          height: 70vw !important;
-          width: 70vw !important;
-          padding: 20px;
+      @media (max-width: 991px) {
+        height: 70vw !important;
+        width: 70vw !important;
+        padding: 20px;
       }
-       @media (max-width: 350px) {
-          height: 63vw !important;
-          width: 63vw !important;
+      @media (max-width: 350px) {
+        height: 63vw !important;
+        width: 63vw !important;
       }
       img {
         height: 55vw;
@@ -592,63 +615,62 @@ export default {
       }
     }
   }
-        .img-wrp{
-                width: 184px;
-                height: 182px;
-                box-sizing: border-box;
-                padding: 0;
-                display: flex !important;
-                justify-content: center;
-                align-items: center;
-                margin: 0 auto;
-                @media (max-width: 767px) {
-                  max-width: 600px;
-                }
-                @media (max-width: 710px) {
-                  max-width: 540px;
-                }
-                 @media (max-width: 600px) {
-                  max-width: 460px;
-                }
-                @media (max-width: 575px) {
-                  max-width: 440px;
-                }
-                @media (max-width: 550px) {
-                  max-width: 350px;
-                }
-                @media (max-width: 450px) {
-                  max-width: 310px;
-                }
-                @media (max-width: 420px) {
-                  max-width: 290px;
-                }
-                @media (max-width: 400px) {
-                  max-width: 270px;
-                }
-                @media (max-width: 375px) {
-                  max-width: 215px;
-                }
-
-            img{
-                width: 145px;
-                height: 145px;
-                object-fit: contain;
-                width: 100%;
-                // padding: 19px 19px 18px 20px;
-            }
-
-        }
-        &:first-child{
-            .img-wrp{
-                margin-left: 0;
-            }
-        }
-        // &:last-child{
-        //     .img-wrp{
-        //         margin-right: 0;
-        //     }
-        // }
+  .img-wrp {
+    width: 184px;
+    height: 182px;
+    box-sizing: border-box;
+    padding: 0;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    @media (max-width: 767px) {
+      max-width: 600px;
     }
+    @media (max-width: 710px) {
+      max-width: 540px;
+    }
+    @media (max-width: 600px) {
+      max-width: 460px;
+    }
+    @media (max-width: 575px) {
+      max-width: 440px;
+    }
+    @media (max-width: 550px) {
+      max-width: 350px;
+    }
+    @media (max-width: 450px) {
+      max-width: 310px;
+    }
+    @media (max-width: 420px) {
+      max-width: 290px;
+    }
+    @media (max-width: 400px) {
+      max-width: 270px;
+    }
+    @media (max-width: 375px) {
+      max-width: 215px;
+    }
+
+    img {
+      width: 145px;
+      height: 145px;
+      object-fit: contain;
+      width: 100%;
+      // padding: 19px 19px 18px 20px;
+    }
+  }
+  &:first-child {
+    .img-wrp {
+      margin-left: 0;
+    }
+  }
+  // &:last-child{
+  //     .img-wrp{
+  //         margin-right: 0;
+  //     }
+  // }
+}
 .small-thumb-prev.control.prev,
 .small-thumb-next.control.next {
   opacity: 0;
@@ -689,10 +711,10 @@ i.small-thumb-prev.control.prev {
   @media (max-width: 750px) {
     top: 28% !important;
   }
-   @media (max-width: 540px) {
+  @media (max-width: 540px) {
     top: 24% !important;
   }
-   @media (max-width: 420px) {
+  @media (max-width: 420px) {
     top: 22% !important;
   }
   @media (max-width: 350px) {

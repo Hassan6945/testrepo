@@ -1,0 +1,30 @@
+#app {
+  font-family: var(--font-primary);
+  font-size: var(--fs-sm); //14px as per design
+  font-weight: 400;
+  line-height: 1.5;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    // font-family: var(--font-primary);
+    // color: var(--c-text);
+    // font-weight: 400;
+    // text-transform: uppercase;
+  }
+
+  $headings: "h1"
+  "h2"
+  "h3"
+  "h4"
+  "h5"
+  "h6";
+  @each $heading in $headings {
+      #{$heading} {
+          font-size: var(--#{$heading});
+      }
+  }
+}

@@ -1,115 +1,143 @@
 <template>
-<AwLoader :class="{ loading }" :loading="loading">
-  <div id="home" v-if="!loading">
+  <AwLoader :class="{ loading }" :loading="loading">
+    <div id="home" v-if="!loading">
       <!-- home-banner component start -->
-    <LazyHydrate when-visible>
-      <HomeBanner
+      <LazyHydrate when-visible>
+        <HomeBanner
+          v-if="
+            getHomeContent &&
+            getHomeContent.components &&
+            getHomeContent.components.middle &&
+            getHomeContent.components.middle.carousel
+          "
+          :slider="getHomeContent.components.middle.carousel"
+        />
+      </LazyHydrate>
+      <!-- home banner component end -->
+
+      <section class="knowledge-sec">
+        <div class="container">
+          <LazyHydrate when-visible>
+            <SeekerKnowledge
+              v-if="
+                getHomeContent &&
+                getHomeContent.components &&
+                getHomeContent.components.middle &&
+                getHomeContent.components.middle.image_title_description[0]
+              "
+              :seekerKnowledge="
+                getHomeContent.components.middle.image_title_description[0]
+              "
+            />
+          </LazyHydrate>
+
+          <!-- featured latest popular category -->
+          <SfLoader :class="{ loader: loading }" :loading="loading">
+            <FeaturedLatestPopular
+              :featured="getHomeFeatured"
+              :latest="getHomeLatest"
+              :popular="getHomePopular"
+              v-if="
+                getHomeFeatured &&
+                getHomeFeatured[0].data &&
+                getHomeLatest &&
+                getHomeLatest[0].data &&
+                getHomePopular &&
+                getHomePopular[0].model
+              "
+            />
+          </SfLoader>
+        </div>
+        <SfLoader :class="{ loader: loading }" :loading="loading">
+          <FeaturedlatestPopularMobile
+            :featured="getHomeFeatured"
+            :latest="getHomeLatest"
+            :popular="getHomePopular"
+            v-if="
+              getHomeFeatured &&
+              getHomeFeatured[0].data &&
+              getHomeLatest &&
+              getHomeLatest[0].data &&
+              getHomePopular &&
+              getHomePopular[0].model
+            "
+          />
+        </SfLoader>
+      </section>
+      <LazyHydrate when-visible>
+        <BrowseBySubject
+          v-if="
+            BrowseBySubject && BrowseBySubject[0] && BrowseBySubject[0].data
+          "
+          :browseBySubject="BrowseBySubject[0].data"
+        />
+      </LazyHydrate>
+
+      <!-- donationblog -->
+      <LazyHydrate when-visible>
+        <DonationBlog
+          v-if="DonationsMagento && DonationsMagento[0].data"
+          :donationsData="DonationsMagento[0].data"
+          :applyClass="applyClass"
+        />
+      </LazyHydrate>
+
+      <!-- donatelist -->
+      <section class="donatelist-sec d-none d-md-block">
+        <div class="container">
+          <LazyHydrate when-visible>
+            <DonatelistBlog
+              v-if="
+                getHomeContent &&
+                getHomeContent.components &&
+                getHomeContent.components.middle &&
+                getHomeContent.components.middle.category_component
+              "
+              :donateList="getHomeContent.components.middle.category_component"
+            />
+          </LazyHydrate>
+        </div>
+      </section>
+      <!-- events -->
+      <section class="event-block" v-if="getUpcomingEvents">
+        <div class="container">
+          <h3 class="th-sec-title text-md-center">Events</h3>
+          <LazyHydrate when-visible>
+            <EventSlider :events="getUpcomingEvents" v-if="getUpcomingEvents" />
+          </LazyHydrate>
+        </div>
+      </section>
+      <!-- AboutBook -->
+      <about-book
+        class="aboute-books-wrap"
         v-if="
           getHomeContent &&
           getHomeContent.components &&
           getHomeContent.components.middle &&
-          getHomeContent.components.middle.carousel
+          getHomeContent.components.middle.title_description_crop_image[0]
         "
-        :slider="getHomeContent.components.middle.carousel"
-      />
-    </LazyHydrate>
-    <!-- home banner component end -->
-
-    <section class="knowledge-sec">
-      <div class="container">
-      <LazyHydrate when-visible>
-        <SeekerKnowledge
-          v-if="
-            getHomeContent &&
-            getHomeContent.components &&
-            getHomeContent.components.middle &&
-            getHomeContent.components.middle.image_title_description[0]
-          "
-          :seekerKnowledge="
-            getHomeContent.components.middle.image_title_description[0]
-          "
-        />
-      </LazyHydrate>
-
-        <!-- featured latest popular category -->
-      <SfLoader :class="{ loader: loading }" :loading="loading">
-        <FeaturedLatestPopular :featured="getHomeFeatured" :latest="getHomeLatest" :popular="getHomePopular" v-if="getHomeFeatured && getHomeFeatured[0].data && getHomeLatest && getHomeLatest[0].data && getHomePopular && getHomePopular[0].model" />
-      </SfLoader>
-
-      </div>
-      <SfLoader :class="{ loader: loading }" :loading="loading">
-        <FeaturedlatestPopularMobile :featured="getHomeFeatured" :latest="getHomeLatest" :popular="getHomePopular" v-if="getHomeFeatured && getHomeFeatured[0].data && getHomeLatest && getHomeLatest[0].data && getHomePopular && getHomePopular[0].model" />
-      </SfLoader>
-    </section>
-    <LazyHydrate when-visible>
-      <BrowseBySubject
-        v-if="
-          BrowseBySubject &&
-          BrowseBySubject[0] &&
-          BrowseBySubject[0].data
+        :content="
+          getHomeContent.components.middle.title_description_crop_image[0]
+            .details[0]
         "
-        :browseBySubject="BrowseBySubject[0].data"
+        :aboutimg="
+          getHomeContent.components.middle.title_description_crop_image[0]
+        "
       />
-    </LazyHydrate>
-
-    <!-- donationblog -->
-    <LazyHydrate when-visible>
-      <DonationBlog
-        v-if="DonationsMagento && DonationsMagento[0].data"
-        :donationsData="DonationsMagento[0].data"
-        :applyClass="applyClass"
-      />
-    </LazyHydrate>
-
-    <!-- donatelist -->
-    <section class="donatelist-sec d-none d-md-block">
-      <div class="container">
-      <LazyHydrate when-visible>
-        <DonatelistBlog
-          v-if="
-            getHomeContent &&
-            getHomeContent.components &&
-            getHomeContent.components.middle &&
-            getHomeContent.components.middle.category_component
-          "
-          :donateList="getHomeContent.components.middle.category_component"
-        />
-      </LazyHydrate>
-      </div>
-    </section>
-    <!-- events -->
-    <section class="event-block" v-if="getUpcomingEvents">
-      <div class="container">
-        <h3 class="th-sec-title text-md-center">Events</h3>
-        <LazyHydrate when-visible>
-          <EventSlider :events="getUpcomingEvents" v-if="getUpcomingEvents" />
-        </LazyHydrate>
-      </div>
-    </section>
-    <!-- AboutBook -->
-    <about-book
-    class="aboute-books-wrap"
-      v-if="getHomeContent && getHomeContent.components && getHomeContent.components.middle && getHomeContent.components.middle.title_description_crop_image[0]"
-      :content="getHomeContent.components.middle.title_description_crop_image[0].details[0]"
-      :aboutimg="getHomeContent.components.middle.title_description_crop_image[0]"
-    />
-    <!-- Follow Us Section Start -->
-    <section class="followus-sec mt-4">
-      <div class="container">
-        <h4 class="followUs text-center">Follow us @MeccaBooks</h4>
-      </div>
-      <follow-info></follow-info>
-      
-    </section>
-  </div>
-</AwLoader>
+      <!-- Follow Us Section Start -->
+      <section class="followus-sec mt-4">
+        <div class="container">
+          <h4 class="followUs text-center">Follow us @MeccaBooks</h4>
+          <FollowInfo />
+          
+        </div>
+      </section>
+    </div>
+  </AwLoader>
 </template>
 
 <script type="module">
-import {
-  defineComponent,
-  ssrRef,
-} from "@nuxtjs/composition-api";
+import { defineComponent, ssrRef } from "@nuxtjs/composition-api";
 import { onSSR, SfLoader } from "@vue-storefront/core";
 import { useUser } from "@vue-storefront/magento";
 import LazyHydrate from "vue-lazy-hydration";
@@ -122,20 +150,20 @@ import DonatelistBlog from "./home/DonatelistBlog.vue";
 import BrowseBySubject from "./home/BrowseBySubject.vue";
 import FeaturedLatestPopular from "./home/FeaturedLatestPopular.vue";
 import DonationBlog from "./home/DonationBlog.vue";
-import FeaturedlatestPopularMobile from './home/FeaturedlatestPopularMobile.vue';
+import FeaturedlatestPopularMobile from "./home/FeaturedlatestPopularMobile.vue";
 import FollowInfo from "./home/FollowInfo.vue";
 import AwLoader from "./AwComponents/atoms/AwLoader.vue";
 export default defineComponent({
   name: "HomePage",
   data() {
     return {
-      applyClass: false
-    }
+      applyClass: false,
+    };
   },
   mounted() {
-    window.addEventListener('scroll', () => {
-      if(window.scrollY > 1000) {
-        this.applyClass = true
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 1000) {
+        this.applyClass = true;
       }
     });
   },
@@ -152,6 +180,7 @@ export default defineComponent({
     FeaturedlatestPopularMobile,
     FollowInfo,
     AwLoader,
+    SfLoader,
   },
   setup(context) {
     const { loading } = useUser();
@@ -159,14 +188,18 @@ export default defineComponent({
     const BrowseBySubject = ssrRef(null);
 
     const fetchBrowseBySubject = async () => {
-      let data = await fetch(process.env.MAGENTO_MECCABOOK + '/rest/V1/subjects').then(res => res.json());
+      let data = await fetch(
+        process.env.MAGENTO_MECCABOOK + "/rest/V1/subjects"
+      ).then((res) => res.json());
       return data;
     };
 
     const DonationsMagento = ssrRef(null);
 
     const fetchDonationsMagento = async () => {
-      let data = await fetch(process.env.MAGENTO_MECCABOOK + '/rest/V1/donations').then(res => res.json());
+      let data = await fetch(
+        process.env.MAGENTO_MECCABOOK + "/rest/V1/donations"
+      ).then((res) => res.json());
       return data;
     };
 
@@ -177,7 +210,7 @@ export default defineComponent({
     return {
       BrowseBySubject,
       DonationsMagento,
-      loading
+      loading,
     };
   },
   computed: {

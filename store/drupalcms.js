@@ -459,7 +459,7 @@ export default {
       {
         console.log(pageNode);
         DrupalAxios
-          .get('https://devmeccabooks.addwebprojects.com/api/content/'+pageNode)
+          .get('https://phpstack-779157-2684722.cloudwaysapps.com/api/content/'+pageNode)
           .then(response => {
             commit('SET_DYNAMIC_PAGE_CONTENT', response.data)
             console.log(response.data);
@@ -472,7 +472,7 @@ export default {
     fetchtop50({commit, dispatch, state}){
       {
       DrupalAxios
-          .get('http://meccamagento.addwebprojects.com/rest/V1/top-50')
+          .get('https://magento-779157-2653303.cloudwaysapps.com/rest/V1/top-50')
           .then(response => {
             commit('SET_TOP50', response.data)
             console.log(response.data);
@@ -485,7 +485,7 @@ export default {
   fetchSignedBooks({commit, dispatch, state}){
     {
     DrupalAxios
-        .get('http://meccamagento.addwebprojects.com/rest/V1/signed-book')
+        .get('https://magento-779157-2653303.cloudwaysapps.com/rest/V1/signed-book')
         .then(response => {
           commit('SET_SIGNED_BOOKS', response.data)
           console.log(response.data);
